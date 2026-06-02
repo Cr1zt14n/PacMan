@@ -13,7 +13,10 @@ public abstract class Entidad {
 
     public abstract void mover(Laberinto laberinto);
 
-    protected boolean puedeMoverse(Laberinto laberinto, int nuevoX, int nuevoY) {
+   protected boolean puedeMoverse(Laberinto laberinto, int nuevoX, int nuevoY) {
+        if (nuevoX < 0 || nuevoX >= laberinto.getAncho() || nuevoY < 0 || nuevoY >= laberinto.getAlto()) {
+            return false;
+        }
         if (!laberinto.esPared(nuevoX, nuevoY)) {
             this.x = nuevoX;
             this.y = nuevoY;
@@ -21,7 +24,6 @@ public abstract class Entidad {
         }
         return false;
     }
-
 
     public int getX() {
         return x;

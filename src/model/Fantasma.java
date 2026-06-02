@@ -1,6 +1,6 @@
 package model;
 
-public class Fantasma extends Entidad implements Runnable {
+public class Fantasma extends Entidad {
     private String color; 
 
     private boolean pausado;
@@ -12,20 +12,35 @@ public class Fantasma extends Entidad implements Runnable {
 
     @Override
     public void mover(Laberinto laberinto) {
-        // Movimiento aleatorio del fantasma
-        Direccion[] direcciones = Direccion.values();
-        Direccion direccionAleatoria = direcciones[(int) (Math.random() * direcciones.length)];
-        int nuevoX = x + direccionAleatoria.getDeltaX();
-        int nuevoY = y + direccionAleatoria.getDeltaY();
+        if (direccion == Direccion.NINGUNA) {
+            elegirDireccionAleatoria();
+        }
+        int nuevoX = x + direccion.getDeltaX();
+        int nuevoY = y + direccion.getDeltaY();
 
-        puedeMoverse(laberinto, nuevoX, nuevoY);
+        if (!puedeMoverse(laberinto, nuevoX, nuevoY)) {
+            Direccion[] direcciones = Direccion.values();
+            Direccion direccionAleatoria;
 
+            do {
+                direccionAleatoria = direcciones[(int) (Math.random() * direcciones.length)];
+            } while (direccionAleatoria == Direccion.NINGUNA);
+            this.direccion = direccionAleatoria;
+
+                nuevoX = x + direccion.getDeltaX();
+                nuevoY = y + direccion.getDeltaY();
+                puedeMoverse(laberinto, nuevoX, nuevoY);
+        } 
     }
 
-    @Override
-    public void run() {
-        // TODO Auto-generated method stub
-      mover(laberinto);
+    private void elegirDireccionAleatoria() {
+        Direccion[] direcciones = Direccion.values();
+        Direccion direccionAleatoria;
+
+        do {
+            direccionAleatoria = direcciones[(int) (Math.random() * direcciones.length)];
+        } while (direccionAleatoria == Direccion.NINGUNA);
+        this.direccion = direccionAleatoria;
     }
     
 }

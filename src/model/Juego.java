@@ -1,14 +1,15 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Juego {
     private Laberinto laberinto;
     private Pacman pacman;
-    private List<Fantasma>  fantasma;
+    private ArrayList<Fantasma>  fantasmas;
     private int puntaje;
     private int vidas;
-    private int puntajeRestante = laberinto.getTotalPuntos();
+    private int puntajeRestante;
     private Estadosjuego estado;
 
     
@@ -23,15 +24,15 @@ public class Juego {
             {1, 1, 1, 1, 1, 1, 1}
         });
         this.pacman = new Pacman(1, 1, Direccion.NINGUNA);
-        this.fantasma = List.of(
-            new Fantasma(5, 1, Direccion.NINGUNA),
-            new Fantasma(5, 3, Direccion.NINGUNA),
-            new Fantasma(5, 5, Direccion.NINGUNA)
-        );
+        this.fantasmas = new ArrayList<>();
+        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA));
+        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA));
+        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA));
+        
         this.puntaje = 0;
         this.vidas = 3;     
         this.estado = Estadosjuego.INICIO;
-        this.puntajeRestante = laberinto.getTotalPuntos();
+        this.puntajeRestante = this.laberinto.getTotalPuntos();
     }
 
     public void iniciarJuego() {
@@ -60,12 +61,11 @@ public class Juego {
             {1, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 1}
         });
-        this.pacman = new Pacman(1, 1, null);
-        this.fantasma = List.of(
-            new Fantasma(5, 1, null),
-            new Fantasma(5, 3, null),
-            new Fantasma(5, 5, null)
-        );
+        this.pacman = new Pacman(1, 1, Direccion.NINGUNA);
+        this.fantasmas.clear();
+        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA));
+        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA));
+        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA));
         this.puntaje = 0;
         this.vidas = 3;     
         this.estado = Estadosjuego.INICIO;
@@ -87,6 +87,7 @@ public class Juego {
             puntajeRestante--;
             if (puntajeRestante == 0) {
                 estado = Estadosjuego.GANADO;
+                return;
             }
         }
 
@@ -99,33 +100,20 @@ public class Juego {
         if (estado != Estadosjuego.JUGANDO) {
             return; // No mover si el juego no está activo
         }
-        for (Fantasma f : fantasma) {
+        for (Fantasma f : fantasmas) {
             f.mover(laberinto);
-            if (f.getX() == pacman.getX() && f.getY() == pacman.getY()) {
-                vidas--;
-                if (vidas <= 0) {
-                    estado = Estadosjuego.PERDIDO;
-                } else {
-                    pacman.reiniciarPosicion(1, 1);
-                }
-            }
         }
         verificarColision();
 
     }
 
-    private void verificarColision() {
-        for (Fantasma f : fantasma) {
+  private void verificarColision() {
+        for (Fantasma f : fantasmas) {
             if (f.getX() == pacman.getX() && f.getY() == pacman.getY()) {
-                vidas--;
-                if (vidas <= 0) {
-                    estado = Estadosjuego.PERDIDO;
-                } else {
-                    pacman.reiniciarPosicion(1, 1);
-                }
+                perderVida(); 
+                break;        
             }
         }
-        perderVida();
     }
 
     private void perderVida() {
@@ -143,12 +131,11 @@ public class Juego {
     }
 
     public Pacman getPacman() {
-        
         return pacman;
     }
 
     public List<Fantasma> getFantasma() {
-        return fantasma;
+        return fantasmas;
     }
 
     public int getPuntaje() {

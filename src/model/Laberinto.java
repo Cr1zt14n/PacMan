@@ -14,7 +14,15 @@ public class Laberinto {
     }
 
     private int calcularTotalPuntos() {
-        
+        int puntos = 0;
+        for (int y = 0; y < alto; y++) {
+            for (int x = 0; x < ancho; x++) {
+                if (mapa[y][x] == 2) {
+                    puntos++;
+                }
+            }
+        }
+        return puntos;
     }
 
     public boolean esPared(int x, int y) {

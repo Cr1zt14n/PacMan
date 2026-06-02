@@ -10,11 +10,10 @@ public class Pacman extends Entidad {
 
     @Override
     public void mover(Laberinto laberinto) {
-        // TODO Auto-generated method stub
         int nuevoX = x + direccion.getDeltaX();
         int nuevoY = y + direccion.getDeltaY();
 
-        intentarMoverse(laberinto, nuevoX, nuevoY);
-        return 
+        puedeMoverse(laberinto, nuevoX, nuevoY);
+        
     }
 }
