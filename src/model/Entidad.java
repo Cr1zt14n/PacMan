@@ -48,7 +48,7 @@ public abstract class Entidad {
         this.direccion = direccion;
     }
 
-    void reiniciarPosicion(int x, int y) {
+    public void reiniciarPosicion(int x, int y) {
         this.x = x;
         this.y = y;
         this.direccion = Direccion.NINGUNA;

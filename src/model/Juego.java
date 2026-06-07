@@ -11,6 +11,7 @@ public class Juego {
     private int vidas;
     private int puntajeRestante;
     private Estadosjuego estado;
+    private Runnable callBackVista;
 
     
     public Juego() {
@@ -25,10 +26,10 @@ public class Juego {
         });
         this.pacman = new Pacman(1, 1, Direccion.NINGUNA);
         this.fantasmas = new ArrayList<>();
-        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA));
-        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA));
-        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA));
-        
+        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA, "Rojo", this));
+        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA, "Azul", this));
+        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA, "Rosa", this));
+
         this.puntaje = 0;
         this.vidas = 3;     
         this.estado = Estadosjuego.INICIO;
@@ -63,9 +64,9 @@ public class Juego {
         });
         this.pacman = new Pacman(1, 1, Direccion.NINGUNA);
         this.fantasmas.clear();
-        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA));
-        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA));
-        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA));
+        this.fantasmas.add(new Fantasma(5, 1, Direccion.NINGUNA, "Rojo", this));
+        this.fantasmas.add(new Fantasma(5, 3, Direccion.NINGUNA, "Azul", this));
+        this.fantasmas.add(new Fantasma(5, 5, Direccion.NINGUNA, "Rosa", this));
         this.puntaje = 0;
         this.vidas = 3;     
         this.estado = Estadosjuego.INICIO;
@@ -76,7 +77,7 @@ public class Juego {
     }
     public void moverPacman(Direccion direccion) {
         if (estado != Estadosjuego.JUGANDO) {
-            return; // No mover si el juego no está activo
+            return; 
         }
         pacman.setDireccion(direccion);
         pacman.mover(laberinto);
@@ -98,7 +99,7 @@ public class Juego {
 
     public void moverFantasma() {
         if (estado != Estadosjuego.JUGANDO) {
-            return; // No mover si el juego no está activo
+            return; 
         }
         for (Fantasma f : fantasmas) {
             f.mover(laberinto);
@@ -107,7 +108,7 @@ public class Juego {
 
     }
 
-  private void verificarColision() {
+    private void verificarColision() {
         for (Fantasma f : fantasmas) {
             if (f.getX() == pacman.getX() && f.getY() == pacman.getY()) {
                 perderVida(); 
@@ -150,5 +151,23 @@ public class Juego {
         return estado;
     }
 
+    public void validarVista() {
+        if (callBackVista != null) {
+            callBackVista.run();
+        }
+    }
+    public void setCallBackVista (Runnable callback) {
+        this.callBackVista = callback;
+    }
+    public void iniciarHilosFantasma() {
+        for (Fantasma f : fantasmas) {
+            Thread t =new Thread(f);
+            t.setDaemon(true);
+            t.start();
+        }
+     }
+     public void verificarColisionFantasma() {
+     verificarColision();
+     }
 }
 

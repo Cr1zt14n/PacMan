@@ -42,7 +42,12 @@ public class PanelJuego extends JPanel {
         for (Fantasma f : juego.getFantasma()) {
             int x = f.getX() * CELDA_SIZE;
             int y = f.getY() * CELDA_SIZE;
-            g.setColor(Color.RED);
+            switch (f.getColor()) {
+                case "Rojo": g.setColor(Color.RED); break;
+                case "Azul": g.setColor(Color.CYAN); break;
+                case "Rosa": g.setColor(Color.PINK); break;
+                default: g.setColor(Color.GRAY);
+            }
             g.fillOval(x + 5, y + 5, CELDA_SIZE - 10, CELDA_SIZE - 10);
             // Ojos simples
             g.setColor(Color.WHITE);

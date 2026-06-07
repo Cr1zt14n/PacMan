@@ -35,7 +35,7 @@ public class Laberinto {
 
     public void comerPunto(int x, int y) {
         if (esPunto(x, y)) {
-            mapa[y][x] = 0; // Eliminar el punto del mapa
+            mapa[y][x] = 0; 
         }
     }
 
